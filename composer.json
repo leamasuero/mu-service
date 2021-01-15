@@ -1,0 +1,16 @@
+{
+  "name": "mercadounico/mu-service",
+  "description": "Mercado único service",
+  "type": "library",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=7.2.0",
+    "mercadounico/mu-client": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "MercadoUnico\\": "src/MercadoUnico"
+    }
+  }
+}
