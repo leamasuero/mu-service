@@ -81,6 +81,11 @@ class Query
     protected $moneda;
 
     /**
+     * @var string
+     */
+    protected $slug;
+
+    /**
      * Query constructor.
      */
     public function __construct(?string $inmobiliaria = null)
@@ -93,6 +98,7 @@ class Query
         $this->moneda = '$';
 
         $this->q = null;
+        $this->slug = null;
         $this->ciudad = null;
         $this->dormitorios = null;
         $this->antiguedad = null;
@@ -119,6 +125,12 @@ class Query
     public function q(string $q): self
     {
         $this->q = $q;
+        return $this;
+    }
+
+    public function slug(string $slug): self
+    {
+        $this->slug = $slug;
         return $this;
     }
 
@@ -187,7 +199,7 @@ class Query
      * @param bool $aptaCredito
      * @return Query
      */
-    public function aptaCredito(?bool $aptaCredito): Query
+    public function aptaCredito(?bool $aptaCredito): self
     {
         $this->aptaCredito = $aptaCredito;
         return $this;
@@ -207,7 +219,7 @@ class Query
      * @param int $min
      * @return Query
      */
-    public function min(?int $min): Query
+    public function min(?int $min): self
     {
         $this->min = $min;
         return $this;
@@ -217,7 +229,7 @@ class Query
      * @param int $max
      * @return Query
      */
-    public function max(?int $max): Query
+    public function max(?int $max): self
     {
         $this->max = $max;
         return $this;
@@ -227,7 +239,7 @@ class Query
      * @param string $moneda
      * @return Query
      */
-    public function moneda(?string $moneda): Query
+    public function moneda(?string $moneda): self
     {
         $this->moneda = $moneda;
         return $this;
@@ -237,7 +249,7 @@ class Query
      * @param int $antiguedad
      * @return Query
      */
-    public function antiguedad(?int $antiguedad): Query
+    public function antiguedad(?int $antiguedad): self
     {
         $this->antiguedad = $antiguedad;
         return $this;
@@ -345,6 +357,7 @@ class Query
                 [
                     'inmobiliaria' => $this->inmobiliaria,
                     'q' => $this->q,
+                    'slug' => $this->slug,
                     'tipoPropiedad' => $this->tiposPropiedad,
                     'operacion' => $this->operaciones,
                     'ubicacion.ciudad' => $this->getCiudad(),

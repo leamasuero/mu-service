@@ -10,6 +10,7 @@ use MercadoUnico\MuService\Transformers\CiudadTransformer;
 use MercadoUnico\MuService\Transformers\OperacionTransformer;
 use MercadoUnico\MuService\Transformers\PropiedadTransformer;
 use MercadoUnico\MuService\Transformers\TipoPropiedadTransformer;
+use MercadoUnico\MuService\Util\Alerta;
 use MercadoUnico\MuService\Util\Query;
 
 class MuService
@@ -21,17 +22,17 @@ class MuService
     /**
      * @var MuClient
      */
-    private $muClient;
+    protected $muClient;
 
     /**
      * @var string
      */
-    private $compraVentaId;
+    protected $compraVentaId;
 
     /**
      * @var string
      */
-    private $alquilerId;
+    protected $alquilerId;
 
     public function __construct(MuClient $muClient, string $alquilerId, string $compraVentaId)
     {
@@ -60,6 +61,21 @@ class MuService
         $response = $this->muClient->findPropiedad($id);
 
         return (new PropiedadTransformer($this->getBaseUrl()))->transform($response->getBody());
+    }
+
+    /**
+     * @param string $id
+     * @return Propiedad|null
+     * @throws \MercadoUnico\MuClient\Exceptions\MuException
+     */
+    public function findPropiedadBySlug(string $slug): ?Propiedad
+    {
+        $query = new Query();
+        $query->slug($slug);
+        $response = $this->muClient->getPropiedades($query->toArray($this->alquilerId, $this->compraVentaId));
+
+        $propiedades = (new PropiedadTransformer($this->getBaseUrl()))->transformCollection($response->getBody());
+        return count($propiedades) ? $propiedades[0] : null;
     }
 
     /**
@@ -112,6 +128,15 @@ class MuService
         $response = $this->muClient->storePropiedad($data);
 
         return (new PropiedadTransformer($this->getBaseUrl()))->transform($response->getBody());
+    }
+
+    public function storeAlerta(Alerta $alerta): Alerta
+    {
+        $response = $this->muClient->storeAlerta($alerta->toArray($this->alquilerId, $this->compraVentaId));
+
+        $alerta->id($response->getBody()['_id']);
+
+        return $alerta;
     }
 
     /**

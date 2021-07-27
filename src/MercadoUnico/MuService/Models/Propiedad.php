@@ -176,6 +176,16 @@ class Propiedad
     protected $antiguedad;
 
     /**
+     * @var string
+     */
+    protected $latitud;
+
+    /**
+     * @var string
+     */
+    protected $longitud;
+
+    /**
      * @var DateTime
      * */
     protected $createdAt;
@@ -751,7 +761,7 @@ class Propiedad
     /**
      * @return int
      */
-    public function getAntiguedad(): int
+    public function getAntiguedad(): ?int
     {
         return $this->antiguedad;
     }
@@ -880,7 +890,41 @@ class Propiedad
         return $this->baseUrl;
     }
 
+    /**
+     * @return string
+     */
+    public function getLatitud(): ?string
+    {
+        return $this->latitud;
+    }
 
+    /**
+     * @param string $latitud
+     * @return Propiedad
+     */
+    public function setLatitud(string $latitud): Propiedad
+    {
+        $this->latitud = $latitud;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLongitud(): ?string
+    {
+        return $this->longitud;
+    }
+
+    /**
+     * @param string $longitud
+     * @return Propiedad
+     */
+    public function setLongitud(string $longitud): Propiedad
+    {
+        $this->longitud = $longitud;
+        return $this;
+    }
 
     public function __toString()
     {

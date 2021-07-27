@@ -28,6 +28,8 @@ class PropiedadTransformer implements TransformerInterface
                 (new CiudadTransformer())->transform($data['ubicacion']['ciudad'] ?? [])
                     ->setProvincia($data['ubicacion']['provincia'] ?? null)
             )
+            ->setLongitud($data['ubicacion']['coordenadas'][0] ?? null)
+            ->setLatitud($data['ubicacion']['coordenadas'][1] ?? null)
             ->setTerreno($data['terreno'] ?? [])
             ->setPrecio($data['precio'] ?? [])
             ->setScopes($data['scopes'] ?? [])
