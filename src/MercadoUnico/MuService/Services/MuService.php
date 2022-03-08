@@ -152,7 +152,7 @@ class MuService
 //        ['mu:corredores:main']: la ven todos los corredores
 //        ['mu:publico', 'mu:corredores:main']: visible por todos
         $data = [
-            "scopes" => [],
+//            "scopes" => [],
             "operaciones" => $this->alquilerId,
             "tipoPropiedad" => $propiedad->getTipoPropiedad()->getId(),
             "descripcion" => $propiedad->getDescripcion(),
@@ -165,6 +165,13 @@ class MuService
         $response = $this->muClient->storePropiedad($data);
 
         return (new PropiedadTransformer($this->getBaseUrl()))->transform($response->getBody());
+    }
+
+    public function updatePropiedadScopes(string $id, array $scopes)
+    {
+        $response = $this->muClient->updatePropiedadScopes($id, $scopes);
+
+        return $response;
     }
 
     /**

@@ -75,7 +75,7 @@ class Ciudad
      * @param string $provincia
      * @return Ciudad
      */
-    public function setProvincia(string $provincia): Ciudad
+    public function setProvincia(?string $provincia): Ciudad
     {
         $this->provincia = $provincia;
         return $this;

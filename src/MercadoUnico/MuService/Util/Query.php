@@ -26,6 +26,11 @@ class Query
     protected $q;
 
     /**
+     * @var array|null
+     */
+    protected $scopes;
+
+    /**
      * @var array
      */
     protected $operaciones;
@@ -98,6 +103,7 @@ class Query
         $this->moneda = '$';
 
         $this->q = null;
+        $this->scopes = null;
         $this->slug = null;
         $this->ciudad = null;
         $this->dormitorios = null;
@@ -125,6 +131,16 @@ class Query
     public function q(string $q): self
     {
         $this->q = $q;
+        return $this;
+    }
+
+    /**
+     * @param array $scopes
+     * @return $this
+     */
+    public function scopes(array $scopes): self
+    {
+        $this->scopes = $scopes;
         return $this;
     }
 
@@ -308,6 +324,16 @@ class Query
     }
 
     /**
+     * @return array|null
+     */
+    public function getScopes(): ?array
+    {
+        return $this->scopes;
+    }
+
+    /**
+     * @param string $alquilerId
+     * @param string $compraVentaId
      * @return array
      */
     public function toArray(string $alquilerId, string $compraVentaId): array
@@ -351,24 +377,31 @@ class Query
             $precio[$monedaKey] = $this->moneda;
         }
 
-        return array_filter(
-            array_merge(
-                $precio,
-                [
-                    'inmobiliaria' => $this->inmobiliaria,
-                    'q' => $this->q,
-                    'slug' => $this->slug,
-                    'tipoPropiedad' => $this->tiposPropiedad,
-                    'operacion' => $this->operaciones,
-                    'ubicacion.ciudad' => $this->getCiudad(),
-                    'cochera' => $this->getCochera(),
-                    'dormitorios' => $this->getDormitorios(),
-                    'aptaCredito' => $this->getAptaCredito(),
-                    'antiguedad' => $this->getAntiguedad(),
-                    'limit' => $this->limit,
-                ]
-            )
-        );
+        $query =
+            array_filter(
+                array_merge(
+                    $precio,
+                    [
+                        'inmobiliaria' => $this->inmobiliaria,
+                        'q' => $this->q,
+                        'slug' => $this->slug,
+                        'tipoPropiedad' => $this->tiposPropiedad,
+                        'operacion' => $this->operaciones,
+                        'ubicacion.ciudad' => $this->getCiudad(),
+                        'cochera' => $this->getCochera(),
+                        'dormitorios' => $this->getDormitorios(),
+                        'aptaCredito' => $this->getAptaCredito(),
+                        'antiguedad' => $this->getAntiguedad(),
+                        'limit' => $this->limit,
+                    ]
+                )
+            );
+
+        if (!is_null($this->scopes)) {
+            $query['scopes'] = $this->scopes;
+        }
+
+        return $query;
     }
 
 
