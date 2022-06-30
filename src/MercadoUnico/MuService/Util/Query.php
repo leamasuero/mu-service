@@ -112,6 +112,8 @@ class Query
         $this->aptaCredito = null;
         $this->min = null;
         $this->max = null;
+
+        $this->orderBy = null;
     }
 
     /**
@@ -331,6 +333,17 @@ class Query
         return $this->scopes;
     }
 
+    public function orderBy(?string $orderBy): self
+    {
+        $this->orderBy = $orderBy;
+        return $this;
+    }
+
+    public function getOrderBy(): ?string
+    {
+        return $this->orderBy;
+    }
+
     /**
      * @param string $alquilerId
      * @param string $compraVentaId
@@ -392,6 +405,7 @@ class Query
                         'dormitorios' => $this->getDormitorios(),
                         'aptaCredito' => $this->getAptaCredito(),
                         'antiguedad' => $this->getAntiguedad(),
+                        'orderBy' => $this->getOrderBy(),
                         'limit' => $this->limit,
                     ]
                 )
@@ -406,3 +420,4 @@ class Query
 
 
 }
+
