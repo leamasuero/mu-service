@@ -202,6 +202,7 @@ class Propiedad
 
     public function __construct($direccion = null)
     {
+        $this->precio = [];
         $this->banos = null;
         $this->cochera = null;
         $this->dormitorios = null;
@@ -417,9 +418,9 @@ class Propiedad
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getObservaciones(): string
+    public function getObservaciones(): ?string
     {
         return $this->observaciones;
     }
@@ -561,9 +562,9 @@ class Propiedad
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getOcultadaAt(): DateTime
+    public function getOcultadaAt(): ?DateTime
     {
         return $this->ocultadaAt;
     }
@@ -597,9 +598,9 @@ class Propiedad
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getOcultaComment(): string
+    public function getOcultaComment(): ?string
     {
         return $this->ocultaComment;
     }
@@ -777,9 +778,9 @@ class Propiedad
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDocumentacion(): string
+    public function getDocumentacion(): ?string
     {
         return $this->documentacion;
     }
@@ -795,9 +796,9 @@ class Propiedad
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getNroPartidaInmobiliaria(): string
+    public function getNroPartidaInmobiliaria(): ?string
     {
         return $this->nroPartidaInmobiliaria;
     }
