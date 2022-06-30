@@ -116,12 +116,18 @@ class MuService
 //        ['mu:publico', 'mu:corredores:main']: visible por todos
         $data = [
             "scopes" => [],
-            "operaciones" => $this->alquilerId,
+            "operacion" => $this->alquilerId,
             "tipoPropiedad" => $propiedad->getTipoPropiedad()->getId(),
             "descripcion" => $propiedad->getDescripcion(),
+            "precio" => $propiedad->getPrecio(),
             "ubicacion" => [
+                "ciudad" => $propiedad->getCiudad()->getId(),
+                "provincia" => "{$propiedad->getCiudad()->getProvincia()}",
                 "direccion" => $propiedad->getDireccion(),
-                "ciudad" => "{$propiedad->getCiudad()}",
+                "coordenadas" => [
+                    $propiedad->getLatitud(),
+                    $propiedad->getLongitud(),
+                ]
             ]
         ];
 
