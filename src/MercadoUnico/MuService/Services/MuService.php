@@ -64,9 +64,8 @@ class MuService
     }
 
     /**
-     * @param string $id
+     * @param string $slug
      * @return Propiedad|null
-     * @throws \MercadoUnico\MuClient\Exceptions\MuException
      */
     public function findPropiedadBySlug(string $slug): ?Propiedad
     {
@@ -135,6 +134,24 @@ class MuService
 
         return (new PropiedadTransformer($this->getBaseUrl()))->transform($response->getBody());
     }
+
+    /**
+     * @param Ciudad $ciudad
+     * @return Ciudad
+     */
+    public function storeCiudad(Ciudad $ciudad): Ciudad
+    {
+
+        $data = [
+            "nombre" => $ciudad->getNombre(),
+            "provincia" => $ciudad->getProvincia(),
+        ];
+
+        $response = $this->muClient->storeCiudad($data);
+
+        return (new CiudadTransformer())->transform($response->getBody());
+    }
+
 
     public function storeAlerta(Alerta $alerta): Alerta
     {

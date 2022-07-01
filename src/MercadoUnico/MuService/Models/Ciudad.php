@@ -26,12 +26,12 @@ class Ciudad
 
     /**
      * Ciudad constructor.
-     * @param string $id
-     * @param string $nombre
-     * @param string $slug
-     * @param string $provincia
+     * @param string|null $id
+     * @param string|null $nombre
+     * @param string|null $slug
+     * @param string|null $provincia
      */
-    public function __construct(string $id, string $nombre, ?string $slug, ?string $provincia = null)
+    public function __construct(?string $id, ?string $nombre, ?string $slug, ?string $provincia = null)
     {
         $this->id = $id;
         $this->nombre = $nombre;
@@ -72,7 +72,7 @@ class Ciudad
     }
 
     /**
-     * @param string $provincia
+     * @param string|null $provincia
      * @return Ciudad
      */
     public function setProvincia(?string $provincia): Ciudad
@@ -80,6 +80,38 @@ class Ciudad
         $this->provincia = $provincia;
         return $this;
     }
+
+    /**
+     * @param string|null $id
+     * @return Ciudad
+     */
+    public function setId(?string $id): Ciudad
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @param string|null $slug
+     * @return Ciudad
+     */
+    public function setSlug(?string $slug): Ciudad
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
+    /**
+     * @param string|null $nombre
+     * @return Ciudad
+     */
+    public function setNombre(?string $nombre): Ciudad
+    {
+        $this->nombre = $nombre;
+        return $this;
+    }
+
+
 
     public function __toString()
     {
