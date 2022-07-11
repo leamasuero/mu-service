@@ -16,9 +16,9 @@ class Query
     private $compraVentaId;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $inmobiliaria;
+    protected $inmobiliarias;
 
     /**
      * @var string
@@ -91,12 +91,17 @@ class Query
     protected $slug;
 
     /**
+     * @var ?string
+     */
+    private $sortBy;
+
+    /**
      * Query constructor.
+     * @param string|null $inmobiliaria
      */
     public function __construct(?string $inmobiliaria = null)
     {
-        $this->inmobiliaria = $inmobiliaria;
-
+        $this->inmobiliarias = $inmobiliaria ? [$inmobiliaria] : [];
         $this->operaciones = [];
         $this->tiposPropiedad = [];
         $this->limit = 20;
@@ -112,6 +117,8 @@ class Query
         $this->aptaCredito = null;
         $this->min = null;
         $this->max = null;
+
+        $this->sortBy = null;
     }
 
     /**
@@ -120,7 +127,7 @@ class Query
      */
     public function inmobiliaria(string $inmobiliaria): self
     {
-        $this->inmobiliaria = $inmobiliaria;
+        $this->inmobiliarias[] = $inmobiliaria;
         return $this;
     }
 
@@ -331,6 +338,17 @@ class Query
         return $this->scopes;
     }
 
+    public function sortBy(?string $sortBy): self
+    {
+        $this->sortBy = $sortBy;
+        return $this;
+    }
+
+    public function getSortBy(): ?string
+    {
+        return $this->sortBy;
+    }
+
     /**
      * @param string $alquilerId
      * @param string $compraVentaId
@@ -382,7 +400,7 @@ class Query
                 array_merge(
                     $precio,
                     [
-                        'inmobiliaria' => $this->inmobiliaria,
+                        'inmobiliaria' => $this->inmobiliarias,
                         'q' => $this->q,
                         'slug' => $this->slug,
                         'tipoPropiedad' => $this->tiposPropiedad,
@@ -392,6 +410,7 @@ class Query
                         'dormitorios' => $this->getDormitorios(),
                         'aptaCredito' => $this->getAptaCredito(),
                         'antiguedad' => $this->getAntiguedad(),
+                        'orderBy' => $this->getSortBy(),
                         'limit' => $this->limit,
                     ]
                 )
@@ -406,3 +425,4 @@ class Query
 
 
 }
+
