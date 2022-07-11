@@ -16,9 +16,9 @@ class Query
     private $compraVentaId;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $inmobiliaria;
+    protected $inmobiliarias;
 
     /**
      * @var string
@@ -91,12 +91,17 @@ class Query
     protected $slug;
 
     /**
+     * @var ?string
+     */
+    private $sortBy;
+
+    /**
      * Query constructor.
+     * @param string|null $inmobiliaria
      */
     public function __construct(?string $inmobiliaria = null)
     {
-        $this->inmobiliaria = $inmobiliaria;
-
+        $this->inmobiliarias = $inmobiliaria ? [$inmobiliaria] : [];
         $this->operaciones = [];
         $this->tiposPropiedad = [];
         $this->limit = 20;
@@ -113,7 +118,7 @@ class Query
         $this->min = null;
         $this->max = null;
 
-        $this->orderBy = null;
+        $this->sortBy = null;
     }
 
     /**
@@ -122,7 +127,7 @@ class Query
      */
     public function inmobiliaria(string $inmobiliaria): self
     {
-        $this->inmobiliaria = $inmobiliaria;
+        $this->inmobiliarias[] = $inmobiliaria;
         return $this;
     }
 
@@ -333,15 +338,15 @@ class Query
         return $this->scopes;
     }
 
-    public function orderBy(?string $orderBy): self
+    public function sortBy(?string $sortBy): self
     {
-        $this->orderBy = $orderBy;
+        $this->sortBy = $sortBy;
         return $this;
     }
 
-    public function getOrderBy(): ?string
+    public function getSortBy(): ?string
     {
-        return $this->orderBy;
+        return $this->sortBy;
     }
 
     /**
@@ -395,7 +400,7 @@ class Query
                 array_merge(
                     $precio,
                     [
-                        'inmobiliaria' => $this->inmobiliaria,
+                        'inmobiliaria' => $this->inmobiliarias,
                         'q' => $this->q,
                         'slug' => $this->slug,
                         'tipoPropiedad' => $this->tiposPropiedad,
@@ -405,7 +410,7 @@ class Query
                         'dormitorios' => $this->getDormitorios(),
                         'aptaCredito' => $this->getAptaCredito(),
                         'antiguedad' => $this->getAntiguedad(),
-                        'orderBy' => $this->getOrderBy(),
+                        'orderBy' => $this->getSortBy(),
                         'limit' => $this->limit,
                     ]
                 )
