@@ -2,6 +2,8 @@
 
 namespace MercadoUnico\MuService\Services;
 
+use MercadoUnico\MuClient\Exceptions\MuErrorResponseException;
+use MercadoUnico\MuClient\Exceptions\MuException;
 use MercadoUnico\MuClient\MuClient;
 use MercadoUnico\MuService\Models\Ciudad;
 use MercadoUnico\MuService\Models\Propiedad;
@@ -54,7 +56,7 @@ class MuService
     /**
      * @param string $id
      * @return Propiedad
-     * @throws \MercadoUnico\MuClient\Exceptions\MuException
+     * @throws MuException
      */
     public function findPropiedad(string $id): Propiedad
     {
@@ -80,7 +82,7 @@ class MuService
     /**
      * @param string $id
      * @return Ciudad
-     * @throws \MercadoUnico\MuClient\Exceptions\MuException
+     * @throws MuException
      */
     public function findCiudad(string $id): Ciudad
     {
@@ -92,7 +94,7 @@ class MuService
     /**
      * @param string $id
      * @return TipoPropiedad
-     * @throws \MercadoUnico\MuClient\Exceptions\MuException
+     * @throws MuException
      */
     public function findTipoPropiedad(string $id): TipoPropiedad
     {
@@ -105,7 +107,7 @@ class MuService
      * @param Propiedad $propiedad
      * @return Propiedad
      * @throws \MercadoUnico\MuClient\Exceptions\JsonErrorException
-     * @throws \MercadoUnico\MuClient\Exceptions\MuException
+     * @throws MuException
      */
     public function storePropiedad(Propiedad $propiedad): Propiedad
     {
@@ -166,7 +168,7 @@ class MuService
      * @param Propiedad $propiedad
      * @return Propiedad
      * @throws \MercadoUnico\MuClient\Exceptions\JsonErrorException
-     * @throws \MercadoUnico\MuClient\Exceptions\MuException
+     * @throws MuException
      */
     public function updatePropiedad(Propiedad $propiedad): Propiedad
     {
@@ -192,16 +194,15 @@ class MuService
 
     public function updatePropiedadScopes(string $id, array $scopes)
     {
-        $response = $this->muClient->updatePropiedadScopes($id, $scopes);
-
-        return $response;
+        return $this->muClient->updatePropiedadScopes($id, $scopes);
     }
+
 
     /**
      * @param Query $query
      * @return iterable
-     * @throws \MercadoUnico\MuClient\Exceptions\MuErrorResponseException
-     * @throws \MercadoUnico\MuClient\Exceptions\MuException
+     * @throws MuErrorResponseException
+     * @throws MuException
      */
     public function search(Query $query): iterable
     {
@@ -212,8 +213,8 @@ class MuService
 
     /**
      * @return iterable
-     * @throws \MercadoUnico\MuClient\Exceptions\MuErrorResponseException
-     * @throws \MercadoUnico\MuClient\Exceptions\MuException
+     * @throws MuErrorResponseException
+     * @throws MuException
      */
     public function getTiposDePropiedad(): iterable
     {
@@ -224,8 +225,8 @@ class MuService
 
     /**
      * @return iterable
-     * @throws \MercadoUnico\MuClient\Exceptions\MuErrorResponseException
-     * @throws \MercadoUnico\MuClient\Exceptions\MuException
+     * @throws MuErrorResponseException
+     * @throws MuException
      */
     public function getCiudades(): iterable
     {
@@ -236,8 +237,8 @@ class MuService
 
     /**
      * @return iterable
-     * @throws \MercadoUnico\MuClient\Exceptions\MuErrorResponseException
-     * @throws \MercadoUnico\MuClient\Exceptions\MuException
+     * @throws MuErrorResponseException
+     * @throws MuException
      */
     public function getOperaciones(): iterable
     {
