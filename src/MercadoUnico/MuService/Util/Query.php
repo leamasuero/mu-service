@@ -5,15 +5,26 @@ namespace MercadoUnico\MuService\Util;
 
 class Query
 {
-    /**
-     * @var string
-     */
-    private $alquilerId;
+    const SCOPE_MU_PUBLICO = 'mu:publico';
+    const SCOPE_MU_CORREDORES_MAIN = 'mu:corredores:main';
+
+    const MONEDA_USD = 'USD';
+    const MONEDA_ARS = '$';
 
     /**
      * @var string
      */
-    private $compraVentaId;
+    protected $alquilerId;
+
+    /**
+     * @var string
+     */
+    protected $compraVentaId;
+
+    /**
+     * @var bool|null
+     */
+    protected ?bool $destacada;
 
     /**
      * @var array
@@ -26,14 +37,14 @@ class Query
     protected $q;
 
     /**
-     * @var array|null
+     * @var array
      */
-    protected $scopes;
+    protected $operaciones;
 
     /**
      * @var array
      */
-    protected $operaciones;
+    protected $scopes;
 
     /**
      * @var string
@@ -93,32 +104,40 @@ class Query
     /**
      * @var ?string
      */
-    private $sortBy;
+    protected $sortBy;
+
 
     /**
      * Query constructor.
-     * @param string|null $inmobiliaria
      */
     public function __construct(?string $inmobiliaria = null)
     {
         $this->inmobiliarias = $inmobiliaria ? [$inmobiliaria] : [];
+
         $this->operaciones = [];
+        $this->scopes = [];
         $this->tiposPropiedad = [];
         $this->limit = 20;
         $this->moneda = '$';
 
         $this->q = null;
-        $this->scopes = null;
         $this->slug = null;
         $this->ciudad = null;
         $this->dormitorios = null;
         $this->antiguedad = null;
         $this->cochera = null;
         $this->aptaCredito = null;
+        $this->destacada = null;
         $this->min = null;
         $this->max = null;
 
         $this->sortBy = null;
+    }
+
+
+    public static function create(): self
+    {
+        return new self();
     }
 
     /**
@@ -141,20 +160,28 @@ class Query
         return $this;
     }
 
-    /**
-     * @param array $scopes
-     * @return $this
-     */
-    public function scopes(array $scopes): self
-    {
-        $this->scopes = $scopes;
-        return $this;
-    }
-
     public function slug(string $slug): self
     {
         $this->slug = $slug;
         return $this;
+    }
+
+    /**
+     * @param bool $destacada
+     * @return self
+     */
+    public function destacada(?bool $destacada = true): self
+    {
+        $this->destacada = $destacada;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    private function getDestacada(): ?string
+    {
+        return $this->destacada ? 'true' : null;
     }
 
 
@@ -169,6 +196,16 @@ class Query
     }
 
     /**
+     * @param string $scope
+     * @return Query
+     */
+    public function scope(string $scope): self
+    {
+        $this->scopes[] = $scope;
+        return $this;
+    }
+
+    /**
      * @param array $operaciones
      * @return Query
      */
@@ -179,11 +216,22 @@ class Query
     }
 
     /**
-     * @param string $ciudad
+     * @param array $scopes
      * @return Query
      */
-    public function ciudad(string $ciudad): self
+    public function scopes(array $scopes): self
     {
+        $this->scopes = $scopes;
+        return $this;
+    }
+
+    /**
+     * @param string|null $ciudad
+     * @return Query
+     */
+    public function ciudad(?string $ciudad): self
+    {
+        // la ciudad puede ser nula
         $this->ciudad = $ciudad;
         return $this;
     }
@@ -269,12 +317,23 @@ class Query
     }
 
     /**
-     * @param int $antiguedad
+     * @param int|null $antiguedad
      * @return Query
      */
     public function antiguedad(?int $antiguedad): self
     {
         $this->antiguedad = $antiguedad;
+        return $this;
+    }
+
+
+    /**
+     * @param int|null $dormitorios
+     * @return self
+     */
+    public function dormitorios(?int $dormitorios): self
+    {
+        $this->dormitorios = $dormitorios;
         return $this;
     }
 
@@ -395,26 +454,26 @@ class Query
             $precio[$monedaKey] = $this->moneda;
         }
 
-        $query =
-            array_filter(
-                array_merge(
-                    $precio,
-                    [
-                        'inmobiliaria' => $this->inmobiliarias,
-                        'q' => $this->q,
-                        'slug' => $this->slug,
-                        'tipoPropiedad' => $this->tiposPropiedad,
-                        'operacion' => $this->operaciones,
-                        'ubicacion.ciudad' => $this->getCiudad(),
-                        'cochera' => $this->getCochera(),
-                        'dormitorios' => $this->getDormitorios(),
-                        'aptaCredito' => $this->getAptaCredito(),
-                        'antiguedad' => $this->getAntiguedad(),
-                        'orderBy' => $this->getSortBy(),
-                        'limit' => $this->limit,
-                    ]
-                )
-            );
+        $query = array_filter(
+            array_merge(
+                $precio,
+                [
+                    'inmobiliaria' => $this->inmobiliarias,
+                    'q' => $this->q,
+                    'slug' => $this->slug,
+                    'tipoPropiedad' => $this->tiposPropiedad,
+                    'operacion' => $this->operaciones,
+                    'ubicacion.ciudad' => $this->getCiudad(),
+                    'cochera' => $this->getCochera(),
+                    'destacada' => $this->getDestacada(),
+                    'dormitorios' => $this->getDormitorios(),
+                    'aptaCredito' => $this->getAptaCredito(),
+                    'antiguedad' => $this->getAntiguedad(),
+                    'orderBy' => $this->getSortBy(),
+                    'limit' => $this->limit,
+                ]
+            )
+        );
 
         if (!is_null($this->scopes)) {
             $query['scopes'] = $this->scopes;
