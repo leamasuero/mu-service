@@ -446,10 +446,17 @@ class Query
                 $monedaKey = 'precio.venta.moneda';
             }
 
-            $precio[$cotasKey] = [
-                ">={$this->min}",
-                "<={$this->max}",
-            ];
+            if ($this->min) {
+                $precio[$cotasKey] = [
+                    ">={$this->min}",
+                ];
+            }
+
+            if ($this->max) {
+                $precio[$cotasKey] = [
+                    "<={$this->max}",
+                ];
+            }
 
             $precio[$monedaKey] = $this->moneda;
         }
