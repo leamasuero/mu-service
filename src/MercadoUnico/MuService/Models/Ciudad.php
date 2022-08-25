@@ -47,17 +47,21 @@ class Ciudad
      * @param string|null $slug
      * @param string|null $provincia
      */
-    public function __construct(?string $id, ?string $nombre, ?string $slug, ?string $provincia = null)
+    public function __construct(?string $id = null, ?string $nombre = null, ?string $slug = null, ?string $provincia = null)
     {
         $this->id = $id;
         $this->nombre = $nombre;
         $this->slug = $slug;
         $this->provincia = $provincia;
+
+        $this->latitud = null;
+        $this->longitud = null;
+        $this->zoom = null;
     }
 
-    public static function create(?string $id, ?string $nombre, ?string $slug, ?string $provincia = null): static
+    public static function create(?string $id = null, ?string $nombre = null, ?string $slug = null, ?string $provincia = null): static
     {
-        return static($id, $nombre, $slug, $provincia);
+        return new static($id, $nombre, $slug, $provincia);
     }
 
     /**
