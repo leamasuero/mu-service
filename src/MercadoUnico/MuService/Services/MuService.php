@@ -145,8 +145,11 @@ class MuService
     {
 
         $data = [
-            "nombre" => $ciudad->getNombre(),
-            "provincia" => $ciudad->getProvincia(),
+            'nombre' => $ciudad->getNombre(),
+            'provincia' => $ciudad->getProvincia(),
+            "latitud" => $ciudad->getLatitud(),
+            "longitud" => $ciudad->getLongitud(),
+            "zoom" => $ciudad->getZoom(),
         ];
 
         $response = $this->muClient->storeCiudad($data);

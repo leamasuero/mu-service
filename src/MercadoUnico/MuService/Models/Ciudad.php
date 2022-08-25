@@ -6,23 +6,39 @@ namespace MercadoUnico\MuService\Models;
 class Ciudad
 {
     /**
-     * @var string
+     * @var string|null
      */
-    private $id;
+    private ?string $id;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $slug;
+    private ?string $slug;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $nombre;
+    private ?string $nombre;
+
     /**
-     * @var string
+     * @var float|null
      */
-    private $provincia;
+    private ?float $latitud;
+
+    /**
+     * @var float|null
+     */
+    private ?float $longitud;
+
+    /**
+     * @var int|null
+     */
+    private ?int $zoom;
+
+    /**
+     * @var string|null
+     */
+    private ?string $provincia;
 
     /**
      * Ciudad constructor.
@@ -37,6 +53,11 @@ class Ciudad
         $this->nombre = $nombre;
         $this->slug = $slug;
         $this->provincia = $provincia;
+    }
+
+    public static function create(?string $id, ?string $nombre, ?string $slug, ?string $provincia = null): static
+    {
+        return static($id, $nombre, $slug, $provincia);
     }
 
     /**
@@ -56,7 +77,7 @@ class Ciudad
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getNombre(): ?string
     {
@@ -64,7 +85,7 @@ class Ciudad
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getProvincia(): ?string
     {
@@ -111,6 +132,59 @@ class Ciudad
         return $this;
     }
 
+    /**
+     * @return float|null
+     */
+    public function getLatitud(): ?float
+    {
+        return $this->latitud;
+    }
+
+    /**
+     * @param float|null $latitud
+     * @return Ciudad
+     */
+    public function setLatitud(?float $latitud): Ciudad
+    {
+        $this->latitud = $latitud;
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getLongitud(): ?float
+    {
+        return $this->longitud;
+    }
+
+    /**
+     * @param float|null $longitud
+     * @return Ciudad
+     */
+    public function setLongitud(?float $longitud): Ciudad
+    {
+        $this->longitud = $longitud;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getZoom(): ?int
+    {
+        return $this->zoom;
+    }
+
+    /**
+     * @param int|null $zoom
+     * @return Ciudad
+     */
+    public function setZoom(?int $zoom): Ciudad
+    {
+        $this->zoom = $zoom;
+        return $this;
+    }
 
 
     public function __toString()
