@@ -24,17 +24,17 @@ class MuService
     /**
      * @var MuClient
      */
-    protected $muClient;
+    protected MuClient $muClient;
 
     /**
      * @var string
      */
-    protected $compraVentaId;
+    protected string $compraVentaId;
 
     /**
      * @var string
      */
-    protected $alquilerId;
+    protected string $alquilerId;
 
     public function __construct(MuClient $muClient, string $alquilerId, string $compraVentaId)
     {
