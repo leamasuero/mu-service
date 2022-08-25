@@ -24,17 +24,17 @@ class MuService
     /**
      * @var MuClient
      */
-    protected $muClient;
+    protected MuClient $muClient;
 
     /**
      * @var string
      */
-    protected $compraVentaId;
+    protected string $compraVentaId;
 
     /**
      * @var string
      */
-    protected $alquilerId;
+    protected string $alquilerId;
 
     public function __construct(MuClient $muClient, string $alquilerId, string $compraVentaId)
     {
@@ -145,8 +145,11 @@ class MuService
     {
 
         $data = [
-            "nombre" => $ciudad->getNombre(),
-            "provincia" => $ciudad->getProvincia(),
+            'nombre' => $ciudad->getNombre(),
+            'provincia' => $ciudad->getProvincia(),
+            "latitud" => $ciudad->getLatitud(),
+            "longitud" => $ciudad->getLongitud(),
+            "zoom" => $ciudad->getZoom(),
         ];
 
         $response = $this->muClient->storeCiudad($data);

@@ -14,12 +14,15 @@ class CiudadTransformer implements TransformerInterface
     public function transform(array $data): Ciudad
     {
 
-        return new Ciudad(
+        return Ciudad::create(
             $data['id'] ?? null,
             $data['nombre'] ?? null,
             $data['slug'] ?? null,
             $data['provincia'] ?? null
-        );
+        )
+            ->setLatitud($data['latitud'] ?? null)
+            ->setLongitud($data['longitud'] ?? null)
+            ->setZoom($data['zoom'] ?? null);
     }
 
     /**
