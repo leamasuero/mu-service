@@ -465,7 +465,8 @@ class Query
             array_merge(
                 $precio,
                 [
-                    'inmobiliaria' => $this->inmobiliarias,
+                    // todo: cuando busco propiedades ocultas de varias inmobiliarias (utilizando un q), no funciona
+                    'inmobiliaria' => count($this->inmobiliarias) == 1 ? array_shift($this->inmobiliarias) : $this->inmobiliarias,
                     'q' => $this->q,
                     'slug' => $this->slug,
                     'tipoPropiedad' => $this->tiposPropiedad,
