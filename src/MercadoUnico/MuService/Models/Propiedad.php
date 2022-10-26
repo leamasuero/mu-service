@@ -202,6 +202,12 @@ class Propiedad
 
     public function __construct($direccion = null)
     {
+        $this->terreno = [
+            'ancho' => null,
+            'largo' => null,
+            'superficie' => null
+        ];
+
         $this->precio = [];
         $this->banos = null;
         $this->cochera = null;

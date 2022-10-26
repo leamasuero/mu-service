@@ -121,6 +121,7 @@ class MuService
             "tipoPropiedad" => $propiedad->getTipoPropiedad()->getId(),
             "descripcion" => $propiedad->getDescripcion(),
             "precio" => $propiedad->getPrecio(),
+            "terreno" => $propiedad->getTerreno(),
             "ubicacion" => [
                 "ciudad" => $propiedad->getCiudad()->getId(),
                 "provincia" => "{$propiedad->getCiudad()->getProvincia()}",
@@ -131,6 +132,7 @@ class MuService
                 ]
             ]
         ];
+
 
         $response = $this->muClient->storePropiedad($data);
 
