@@ -6,6 +6,7 @@ use MercadoUnico\MuClient\Exceptions\MuErrorResponseException;
 use MercadoUnico\MuClient\Exceptions\MuException;
 use MercadoUnico\MuClient\MuClient;
 use MercadoUnico\MuService\Models\Ciudad;
+use MercadoUnico\MuService\Models\Operacion;
 use MercadoUnico\MuService\Models\Propiedad;
 use MercadoUnico\MuService\Models\TipoPropiedad;
 use MercadoUnico\MuService\Transformers\CiudadTransformer;
@@ -205,9 +206,9 @@ class MuService
 
     /**
      * @param Query $query
-     * @return iterable
      * @throws MuErrorResponseException
      * @throws MuException
+     * @return Propiedad[]
      */
     public function search(Query $query): iterable
     {
@@ -217,7 +218,7 @@ class MuService
     }
 
     /**
-     * @return iterable
+     * @return TipoPropiedad[]
      * @throws MuErrorResponseException
      * @throws MuException
      */
@@ -229,7 +230,7 @@ class MuService
     }
 
     /**
-     * @return iterable
+     * @return Ciudad[]
      * @throws MuErrorResponseException
      * @throws MuException
      */
@@ -241,7 +242,7 @@ class MuService
     }
 
     /**
-     * @return iterable
+     * @return Operacion[]
      * @throws MuErrorResponseException
      * @throws MuException
      */
