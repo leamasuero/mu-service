@@ -81,7 +81,7 @@ class Corredor
      * @param string $inmobiliariaId
      * @param bool $telefonosPublicos
      */
-    public function __construct(string $id, string $nombre, string $email, string $matricula, ?string $descripcion, ?string $fotografia, ?string $telefono, ?string $celular, ?string $domicilio, ?string $ciudadId, ?string $inmobiliariaId, ?bool $telefonosPublicos)
+    public function __construct(?string $id, ?string $nombre, ?string $email, ?string $matricula, ?string $descripcion, ?string $fotografia, ?string $telefono, ?string $celular, ?string $domicilio, ?string $ciudadId, ?string $inmobiliariaId, ?bool $telefonosPublicos)
     {
         $this->id = $id;
         $this->nombre = $nombre;
