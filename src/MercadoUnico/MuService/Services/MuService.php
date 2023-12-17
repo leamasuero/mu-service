@@ -234,9 +234,9 @@ class MuService
      * @throws MuErrorResponseException
      * @throws MuException
      */
-    public function getCiudades(): iterable
+    public function getCiudades(?string $inmobiliariaId = null): iterable
     {
-        $response = $this->muClient->getCiudades();
+        $response = $this->muClient->getCiudades($inmobiliariaId);
 
         return (new CiudadTransformer())->transformCollection($response->getBody());
     }

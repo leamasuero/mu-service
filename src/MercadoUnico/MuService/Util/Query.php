@@ -47,24 +47,14 @@ class Query
     protected $scopes;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $ciudad;
+    protected $ciudades;
 
     /**
      * @var array
      */
     protected $tiposPropiedad;
-
-    /**
-     * @var int
-     */
-    protected $limit;
-
-    /**
-     * @var int
-     */
-    protected $skip;
 
     /**
      * @var int
@@ -97,7 +87,7 @@ class Query
     protected $max;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $moneda;
 
@@ -105,6 +95,16 @@ class Query
      * @var string
      */
     protected $slug;
+
+    /**
+     * @var int
+     */
+    protected $limit;
+
+    /**
+     * @var ?int
+     */
+    protected $skip;
 
     /**
      * @var ?string
@@ -118,16 +118,15 @@ class Query
     public function __construct(?string $inmobiliaria = null)
     {
         $this->inmobiliarias = $inmobiliaria ? [$inmobiliaria] : [];
-        $this->operaciones = [];
         $this->scopes = null; // null es la ausencia de valor; [] es un scope valido
+        $this->operaciones = [];
+        $this->ciudades = [];
+        $this->scopes = [];
         $this->tiposPropiedad = [];
-        $this->limit = 20;
-        $this->skip = 0;
         $this->moneda = '$';
 
         $this->q = null;
         $this->slug = null;
-        $this->ciudad = null;
         $this->dormitorios = null;
         $this->antiguedad = null;
         $this->cochera = null;
@@ -136,6 +135,8 @@ class Query
         $this->min = null;
         $this->max = null;
 
+        $this->limit = 20;
+        $this->skip = 0;
         $this->sortBy = null;
     }
 
@@ -181,12 +182,13 @@ class Query
         return $this;
     }
 
+
     /**
-     * @return null|string
+     * @return bool|null
      */
-    private function getDestacada(): ?string
+    public function getDestacada(): ?bool
     {
-        return $this->destacada ? 'true' : null;
+        return $this->destacada;
     }
 
 
@@ -236,8 +238,21 @@ class Query
      */
     public function ciudad(?string $ciudad): self
     {
-        // la ciudad puede ser nula
-        $this->ciudad = $ciudad;
+        if ($ciudad) {
+            // la ciudad puede ser nula
+            $this->ciudades[] = $ciudad;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $ciudades
+     * @return Query
+     */
+    public function ciudades(array $ciudades): self
+    {
+        $this->ciudades = $ciudades;
         return $this;
     }
 
@@ -292,13 +307,11 @@ class Query
     }
 
     /**
-     * @param int $skip
-     * @return Query
+     * @return int|null
      */
-    public function skip(int $skip): self
+    public function getLimit(): ?int
     {
-        $this->skip = $skip;
-        return $this;
+        return $this->limit;
     }
 
     /**
@@ -355,51 +368,47 @@ class Query
     /**
      * @return null|string
      */
-    private function getAntiguedad(): ?string
+    public function getAntiguedad(): ?int
     {
-        if ($this->antiguedad) {
-            return "<={$this->antiguedad}";
-        };
-
-        return null;
+        return $this->antiguedad;
     }
 
     /**
-     * @return null|string
+     * @return null|bool
      */
-    private function getCochera(): ?string
+    public function getCochera(): ?bool
     {
-        return $this->cochera ? 'true' : null;
+        return $this->cochera;
     }
 
     /**
-     * @return null|string
+     * @return null|bool
      */
-    private function getAptaCredito(): ?string
+    public function getAptaCredito(): ?bool
     {
-        return $this->aptaCredito ? 'true' : null;
+        return $this->aptaCredito;
     }
 
     /**
      * @return bool
      */
-    private function hasOperacionCompraVenta(): bool
+    public function hasOperacionCompraVenta(): bool
     {
         return in_array($this->compraVentaId, $this->operaciones);
     }
 
     /**
-     * @return null|string
+     * @return array
      */
-    private function getCiudad(): ?string
+    public function getCiudades(): array
     {
-        return $this->ciudad;
+        return $this->ciudades;
     }
 
     /**
      * @return int|null
      */
-    private function getDormitorios(): ?int
+    public function getDormitorios(): ?int
     {
         return $this->dormitorios;
     }
@@ -416,6 +425,67 @@ class Query
     {
         $this->sortBy = $sortBy;
         return $this;
+    }
+
+    public function skip(int $skip): self
+    {
+        $this->skip = $skip;
+        return $this;
+    }
+
+    public function getSkip(): ?int
+    {
+        return $this->skip;
+    }
+
+    public function getAlquilerId(): string
+    {
+        return $this->alquilerId;
+    }
+
+    public function getCompraVentaId(): string
+    {
+        return $this->compraVentaId;
+    }
+
+    public function getInmobiliarias(): array
+    {
+        return $this->inmobiliarias;
+    }
+
+    public function getQ(): ?string
+    {
+        return $this->q;
+    }
+
+    public function getOperaciones(): array
+    {
+        return $this->operaciones;
+    }
+
+    public function getTiposPropiedad(): array
+    {
+        return $this->tiposPropiedad;
+    }
+
+    public function getMin(): ?int
+    {
+        return $this->min;
+    }
+
+    public function getMax(): ?int
+    {
+        return $this->max;
+    }
+
+    public function getMoneda(): ?string
+    {
+        return $this->moneda;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
     }
 
     public function getSortBy(): ?string
@@ -477,6 +547,7 @@ class Query
             $precio[$monedaKey] = $this->moneda;
         }
 
+
         $query = array_filter(
             array_merge(
                 $precio,
@@ -487,13 +558,13 @@ class Query
                     'slug' => $this->slug,
                     'tipoPropiedad' => $this->tiposPropiedad,
                     'operacion' => $this->operaciones,
-                    'ubicacion.ciudad' => $this->getCiudad(),
-                    'cochera' => $this->getCochera(),
-                    'destacada' => $this->getDestacada(),
-                    'dormitorios' => $this->getDormitorios(),
-                    'aptaCredito' => $this->getAptaCredito(),
-                    'antiguedad' => $this->getAntiguedad(),
-                    'orderBy' => $this->getSortBy(),
+                    'ubicacion.ciudad' => empty($this->ciudades) ? null : $this->ciudades[0],
+                    'cochera' => $this->cochera ? 'true' : null,
+                    'destacada' => $this->destacada ? 'true' : null,
+                    'dormitorios' => $this->dormitorios,
+                    'aptaCredito' => $this->aptaCredito ? 'true' : null,
+                    'antiguedad' => $this->antiguedad ? "<={$this->antiguedad}" : null,
+                    'orderBy' => $this->sortBy,
                     'limit' => $this->limit,
                     'skip' => $this->skip,
                 ]

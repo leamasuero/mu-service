@@ -6,7 +6,7 @@
   "minimum-stability": "stable",
   "require": {
     "php": ">=7.2.0",
-    "mercadounico/mu-client": "^v1.0.3"
+    "mercadounico/mu-client": "^v1.0.4"
   },
   "autoload": {
     "psr-4": {
