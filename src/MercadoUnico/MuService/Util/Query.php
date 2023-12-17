@@ -64,6 +64,11 @@ class Query
     /**
      * @var int
      */
+    protected $skip;
+
+    /**
+     * @var int
+     */
     protected $dormitorios;
 
     /**
@@ -113,11 +118,11 @@ class Query
     public function __construct(?string $inmobiliaria = null)
     {
         $this->inmobiliarias = $inmobiliaria ? [$inmobiliaria] : [];
-
         $this->operaciones = [];
-        $this->scopes = [];
+        $this->scopes = null; // null es la ausencia de valor; [] es un scope valido
         $this->tiposPropiedad = [];
         $this->limit = 20;
+        $this->skip = 0;
         $this->moneda = '$';
 
         $this->q = null;
@@ -287,6 +292,16 @@ class Query
     }
 
     /**
+     * @param int $skip
+     * @return Query
+     */
+    public function skip(int $skip): self
+    {
+        $this->skip = $skip;
+        return $this;
+    }
+
+    /**
      * @param int $min
      * @return Query
      */
@@ -432,9 +447,10 @@ class Query
         //cochera=true&
         //aptaCredito=true
         //&limit=25
+        //&skip=0
         //&source=buscador-web
 
-        //Request URL: https://api.mercado-unico.com/propiedades?precio.alquiler.valor[]=%3E%3D22000&precio.alquiler.valor[]=%3C%3D83000&precio.alquiler.moneda=$&ubicacion.ciudad=58bac0b35a9f803452303225&dormitorios=%3E%3D2&antiguedad=%3C%3D10&tipoPropiedad[]=58f5563e2a90f5cb1104b49c&tipoPropiedad[]=58f5563d988e744fda7edae3&operaciones[]=58f554bf615347788ff291d2&cochera=true&aptaCredito=true&limit=25&source=buscador-web
+        //Request URL: https://api.mercado-unico.com/propiedades?precio.alquiler.valor[]=%3E%3D22000&precio.alquiler.valor[]=%3C%3D83000&precio.alquiler.moneda=$&ubicacion.ciudad=58bac0b35a9f803452303225&dormitorios=%3E%3D2&antiguedad=%3C%3D10&tipoPropiedad[]=58f5563e2a90f5cb1104b49c&tipoPropiedad[]=58f5563d988e744fda7edae3&operaciones[]=58f554bf615347788ff291d2&cochera=true&aptaCredito=true&limit=25&skip=0&source=buscador-web
 
         $precio = [];
         if ($this->min || $this->max) {
@@ -466,7 +482,7 @@ class Query
                 $precio,
                 [
                     // todo: cuando busco propiedades ocultas de varias inmobiliarias (utilizando un q), no funciona
-                    'inmobiliaria' => count($this->inmobiliarias) == 1 ? array_shift($this->inmobiliarias) : $this->inmobiliarias,
+                    'inmobiliaria' => count($this->inmobiliarias) == 1 ? $this->inmobiliarias[0] : $this->inmobiliarias,
                     'q' => $this->q,
                     'slug' => $this->slug,
                     'tipoPropiedad' => $this->tiposPropiedad,
@@ -479,6 +495,7 @@ class Query
                     'antiguedad' => $this->getAntiguedad(),
                     'orderBy' => $this->getSortBy(),
                     'limit' => $this->limit,
+                    'skip' => $this->skip,
                 ]
             )
         );
