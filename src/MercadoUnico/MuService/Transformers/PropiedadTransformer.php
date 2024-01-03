@@ -51,6 +51,9 @@ class PropiedadTransformer implements TransformerInterface
             ->setDormitorios($data['dormitorios'] ?? null)
             ->setBanos($data['banos'] ?? null)
             ->setCochera($data['cochera'] ?? false)
+            ->setCartel($data['cartel'] ?? false)
+            ->setAptaCredito($data['aptaCredito'] ?? false)
+            ->setCondicionada($data['condicionada'] ?? false)
             ->setTipoPropiedad(
                 (new TipoPropiedadTransformer())->transform($data['tipoPropiedad'] ?? [])
             )

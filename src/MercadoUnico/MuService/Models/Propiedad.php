@@ -52,6 +52,22 @@ class Propiedad
     protected $cochera;
 
     /**
+     * @var bool
+     */
+    protected $cartel;
+
+    /**
+     * @var bool
+     */
+    protected $aptaCredito;
+
+    /**
+     * @var bool $condicionada: Venta supeditada a la compra simultanea de otra propiedad.
+     *
+     */
+    protected $condicionada;
+
+    /**
      * @var array
      */
     protected $precio;
@@ -156,7 +172,7 @@ class Propiedad
     protected $servicios;
 
     /**
-     * @var array
+     * @var array $adicionales: patio, pileta, terraza, balcon, etc
      */
     protected $adicionales;
 
@@ -211,6 +227,9 @@ class Propiedad
         $this->precio = [];
         $this->banos = null;
         $this->cochera = null;
+        $this->cartel = false;
+        $this->aptaCredito = false;
+        $this->condicionada = false;
         $this->dormitorios = null;
         $this->operaciones = [];
         $this->direccion = $direccion;
@@ -420,6 +439,39 @@ class Propiedad
     public function setCochera(?bool $cochera): Propiedad
     {
         $this->cochera = $cochera;
+        return $this;
+    }
+
+    public function getCartel(): bool
+    {
+        return $this->cartel;
+    }
+
+    public function setCartel(bool $cartel): Propiedad
+    {
+        $this->cartel = $cartel;
+        return $this;
+    }
+
+    public function isAptaCredito(): bool
+    {
+        return $this->aptaCredito;
+    }
+
+    public function setAptaCredito(bool $aptaCredito): Propiedad
+    {
+        $this->aptaCredito = $aptaCredito;
+        return $this;
+    }
+
+    public function isCondicionada(): bool
+    {
+        return $this->condicionada;
+    }
+
+    public function setCondicionada(bool $condicionada): Propiedad
+    {
+        $this->condicionada = $condicionada;
         return $this;
     }
 
@@ -766,7 +818,7 @@ class Propiedad
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getAntiguedad(): ?int
     {
@@ -774,7 +826,7 @@ class Propiedad
     }
 
     /**
-     * @param int $antiguedad
+     * @param int|null $antiguedad
      * @return Propiedad
      */
     public function setAntiguedad(?int $antiguedad): Propiedad
@@ -810,7 +862,7 @@ class Propiedad
     }
 
     /**
-     * @param string $nroPartidaInmobiliaria
+     * @param string|null $nroPartidaInmobiliaria
      * @return Propiedad
      */
     public function setNroPartidaInmobiliaria(?string $nroPartidaInmobiliaria): Propiedad
@@ -898,7 +950,7 @@ class Propiedad
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getLatitud(): ?string
     {
@@ -916,7 +968,7 @@ class Propiedad
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getLongitud(): ?string
     {
