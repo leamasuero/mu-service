@@ -5,6 +5,7 @@ namespace MercadoUnico\MuService\Services;
 use MercadoUnico\MuClient\Exceptions\MuErrorResponseException;
 use MercadoUnico\MuClient\Exceptions\MuException;
 use MercadoUnico\MuClient\MuClient;
+use MercadoUnico\MuService\Models\Caracteristica;
 use MercadoUnico\MuService\Models\Ciudad;
 use MercadoUnico\MuService\Models\Operacion;
 use MercadoUnico\MuService\Models\Propiedad;
@@ -117,12 +118,9 @@ class MuService
 //        ['mu:corredores:main']: la ven todos los corredores
 //        ['mu:publico', 'mu:corredores:main']: visible por todos
         $data = [
-            "scopes" => [],
-            "operacion" => $this->alquilerId,
-            "tipoPropiedad" => $propiedad->getTipoPropiedad()->getId(),
-            "descripcion" => $propiedad->getDescripcion(),
-            "precio" => $propiedad->getPrecio(),
-            "terreno" => $propiedad->getTerreno(),
+            "scopes" => $propiedad->getScopes(),
+//            "inmobiliaria" => '58bac1d3c2138539ce7f82d0', # la esta deduciendo mu
+//            "corredor" => 'noenviamos', # vendedor id?
             "ubicacion" => [
                 "ciudad" => $propiedad->getCiudad()->getId(),
                 "provincia" => "{$propiedad->getCiudad()->getProvincia()}",
@@ -131,9 +129,42 @@ class MuService
                     $propiedad->getLatitud(),
                     $propiedad->getLongitud(),
                 ]
-            ]
+            ],
+            "descripcion" => $propiedad->getDescripcion(),
+            "observaciones" => $propiedad->getObservaciones(),
+            "documentacion" => $propiedad->getDocumentacion(),
+            "terreno" => $propiedad->getTerreno(),
+            "superficieCubierta" => $propiedad->getSuperficieCubierta(),
+            "superficieSemicubierta" => $propiedad->getSuperficieCubierta(),
+            "antiguedad" => $propiedad->getAntiguedad(),
+            "operacion" => array_map(function (Operacion $operacion) {
+                return $operacion->getId();
+            }, $propiedad->getOperaciones()),
+            "tipoPropiedad" => $propiedad->getTipoPropiedad()->getId(),
+            "precio" => $propiedad->getPrecio(),
+            "cochera" => $propiedad->getCochera(),
+            "aptaCredito" => $propiedad->isAptaCredito(),
+            "dormitorios" => $propiedad->getDormitorios(),
+            "banos" => $propiedad->getBanos(),
+            "imagenes" => [], # todo
+            "panoramicas" => [], # todo
+            "documentos" => [], # todo
+            "videos" => [], # todo
+            "cartel" => $propiedad->getCartel(),
+            "esCondicionada" => $propiedad->isCondicionada(),
+            "observacionesPrivadas" => $propiedad->getObservacionesPrivadas(),
+            "servicios" => array_map(function (Caracteristica $servicio) {
+                return $servicio->toArray();
+            }, $propiedad->getServicios()),
+            "adicionales" => array_map(function (Caracteristica $adicional) {
+                return $adicional->toArray();
+            }, $propiedad->getAdicionales()),
+            "documentacionDisponible" => array_map(function (Caracteristica $documentacion) {
+                return $documentacion->toArray();
+            }, $propiedad->getDocumentacionDisponible()),
+            "nroPartidaInmobiliaria" => $propiedad->getNroPartidaInmobiliaria(),
+            "estado" => $propiedad->getEstado(),
         ];
-
 
         $response = $this->muClient->storePropiedad($data);
 
@@ -206,9 +237,9 @@ class MuService
 
     /**
      * @param Query $query
-     * @throws MuErrorResponseException
-     * @throws MuException
      * @return Propiedad[]
+     * @throws MuException
+     * @throws MuErrorResponseException
      */
     public function search(Query $query): iterable
     {

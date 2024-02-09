@@ -6,96 +6,85 @@ use DateTime;
 
 class Propiedad
 {
-    /**
-     * @var string
-     */
-    protected $id;
+    // SCOPE
+    // []: solo la ve la inmobiliaria
+    // ['mu:corredores:main']: la ven todos los corredores
+    // ['mu:publico', 'mu:corredores:main']: visible por todos
+    const SCOPE_PUBLICO = 'mu:publico';
+    const SCOPE_CORREDORES = 'mu:corredores:main';
 
     /**
      * @var string
      */
-    protected $codigo;
+    protected ?string $id;
 
     /**
      * @var string
      */
-    protected $direccion;
+    protected ?string $codigo;
 
     /**
      * @var string
      */
-    protected $descripcion;
+    protected ?string $direccion;
 
     /**
-     * @var Ciudad
+     * @var string
      */
-    protected $ciudad;
+    protected ?string $descripcion;
+
+    protected ?Ciudad $ciudad;
+    /**
+     * @var ?Importe
+     */
+    protected ?Importe $precioVenta;
+
+    /**
+     * @var ?Importe
+     */
+    protected ?Importe $precioAlquiler;
 
     /**
      * @var TipoPropiedad
      */
-    protected $tipoPropiedad;
+    protected ?TipoPropiedad $tipoPropiedad;
 
     /**
      * @var int
      */
-    protected $banos;
+    protected ?int $banos = null;
 
     /**
      * @var int
      */
-    protected $dormitorios;
+    protected ?int $dormitorios = null;
 
-    /**
-     * @var bool
-     */
-    protected $cochera;
 
-    /**
-     * @var bool
-     */
-    protected $cartel;
+    protected int $porcentajeCompartido;
 
-    /**
-     * @var bool
-     */
-    protected $aptaCredito;
-
-    /**
-     * @var bool $condicionada: Venta supeditada a la compra simultanea de otra propiedad.
-     *
-     */
-    protected $condicionada;
+    protected int $estado;
 
     /**
      * @var array
      */
-    protected $precio;
-
-    /**
-     * @var array
-     */
-    protected $terreno;
-
-    /**
-     * @var array
-     */
-    protected $scopes;
+    protected array $scopes;
 
     /**
      * @var string
      */
-    protected $observaciones;
+    protected ?string $observaciones;
+
+    protected ?string $observacionesPrivadas;
 
     /**
      * @var string
      */
-    protected $documentacion;
+    protected ?string $documentacion = null;
 
     /**
      * @var string
      */
-    protected $nroPartidaInmobiliaria;
+    protected ?string $nroPartidaInmobiliaria = null;
 
     /**
      * @var bool
@@ -103,113 +92,118 @@ class Propiedad
     protected $ofertaColectiva;
 
     /**
-     * @var array
+     * @var array<Operacion>
      */
-    protected $operaciones;
+    protected array $operaciones;
 
     /**
      * @var array
      */
-    protected $imagenes;
+    protected array $imagenes;
 
     /**
      * @var array
      */
-    protected $panoramicas;
+    protected array $panoramicas;
 
     /**
      * @var array
      */
-    protected $videos;
+    protected array $videos;
+
+
+    /**
+     * @var array
+     */
+    protected array $reportes;
+
+    /**
+     * @var string
+     */
+    protected ?string $ocultaComment;
 
     /**
      * @var bool
      */
-    protected $destacada;
+    protected bool $aptaCredito;
 
     /**
-     * @var int
+     * @var bool $condicionada : Venta supeditada a la compra simultanea de otra propiedad.
+     *
      */
-    protected $estado;
+    protected bool $condicionada;
 
     /**
-     * @var \DateTime
+     * @var bool
      */
-    protected $ocultadaAt;
-    /**
-     * @var array
-     */
-    protected $reportes;
+    protected bool $destacada;
 
     /**
-     * @var string
+     * @var bool
      */
-    protected $ocultaComment;
+    protected bool $cochera;
+
+    /**
+     * @var bool
+     */
+    protected bool $cartel;
 
     /**
      * @var Inmobiliaria
      */
-    protected $inmobiliaria;
+    protected ?Inmobiliaria $inmobiliaria;
 
     /**
      * @var Corredor
      */
-    protected $corredor;
+    protected ?Corredor $corredor;
 
     /**
      * @var array
      */
-    protected $documentos;
+    protected array $documentos;
 
     /**
-     * @var array
+     * @var array<Caracteristica> $documentacionDisponible : plano de mensura, plano de edificacion, escritura traslativa de dominio
      */
-    protected $documentacionDisponible;
+    protected array $documentacionDisponible;
 
     /**
-     * @var array
+     * @var array<Caracteristica> $servicios : gas natural, electricidad, cloacas, etc
      */
-    protected $servicios;
+    protected array $servicios;
 
     /**
-     * @var array $adicionales: patio, pileta, terraza, balcon, etc
+     * @var array<Caracteristica> $adicionales : patio, pileta, terraza, balcon, etc
      */
-    protected $adicionales;
+    protected array $adicionales;
 
     /**
      * @var string
      */
-    protected $slug;
+    protected string $slug;
 
-    /**
-     * @var float
-     */
-    protected $superficieCubierta;
+    protected ?int $ancho = null;
 
-    /**
-     * @var int
-     */
-    protected $antiguedad;
+    protected ?int $largo = null;
 
-    /**
-     * @var string
-     */
-    protected $latitud;
+    protected ?int $superficie = null;
 
-    /**
-     * @var string
-     */
-    protected $longitud;
+    protected ?int $superficieCubierta = null;
 
-    /**
-     * @var DateTime
-     * */
-    protected $createdAt;
+    protected ?int $superficieSemicubierta = null;
 
-    /**
-     * @var DateTime
-     * */
-    protected $updatedAt;
+    protected ?int $antiguedad = null;
+
+    protected ?string $latitud;
+
+    protected ?string $longitud;
+
+    protected ?\DateTimeInterface $ocultadaAt;
+
+    protected ?\DateTimeInterface $createdAt;
+
+    protected ?\DateTimeInterface $updatedAt;
 
     /**
      * @var string
@@ -218,21 +212,21 @@ class Propiedad
 
     public function __construct($direccion = null)
     {
-        $this->terreno = [
-            'ancho' => null,
-            'largo' => null,
-            'superficie' => null
-        ];
+        $this->direccion = $direccion;
+        $this->estado = 1;
+        $this->scopes = [];
 
-        $this->precio = [];
-        $this->banos = null;
-        $this->cochera = null;
+        $this->cochera = false;
         $this->cartel = false;
         $this->aptaCredito = false;
         $this->condicionada = false;
-        $this->dormitorios = null;
+        $this->destacada = false;
+
         $this->operaciones = [];
-        $this->direccion = $direccion;
+        $this->servicios = [];
+        $this->adicionales = [];
+        $this->documentacionDisponible = [];
+
         $this->createdAt = new DateTime();
         $this->updatedAt = new DateTime();
     }
@@ -493,6 +487,18 @@ class Propiedad
         return $this;
     }
 
+    public function getObservacionesPrivadas(): ?string
+    {
+        return $this->observacionesPrivadas;
+    }
+
+    public function setObservacionesPrivadas(?string $observacionesPrivadas): Propiedad
+    {
+        $this->observacionesPrivadas = $observacionesPrivadas;
+        return $this;
+    }
+
+
     /**
      * @return bool
      */
@@ -512,7 +518,7 @@ class Propiedad
     }
 
     /**
-     * @return array
+     * @return array<Operacion>
      */
     public function getOperaciones(): array
     {
@@ -736,7 +742,7 @@ class Propiedad
     }
 
     /**
-     * @param array $documentacionDisponible
+     * @param array<Caracteristica> $documentacionDisponible
      * @return Propiedad
      */
     public function setDocumentacionDisponible(array $documentacionDisponible): Propiedad
@@ -745,8 +751,15 @@ class Propiedad
         return $this;
     }
 
+    public function addDocumentacionDisponible(Caracteristica $documentacion): Propiedad
+    {
+        $this->documentacionDisponible[] = $documentacion;
+        return $this;
+    }
+
+
     /**
-     * @return array
+     * @return array<Servicio>
      */
     public function getServicios(): array
     {
@@ -754,12 +767,18 @@ class Propiedad
     }
 
     /**
-     * @param array $servicios
+     * @param array<Caracteristica> $servicios
      * @return Propiedad
      */
     public function setServicios(array $servicios): Propiedad
     {
         $this->servicios = $servicios;
+        return $this;
+    }
+
+    public function addServicio(Caracteristica $servicio): Propiedad
+    {
+        $this->servicios[] = $servicio;
         return $this;
     }
 
@@ -772,12 +791,18 @@ class Propiedad
     }
 
     /**
-     * @param array $adicionales
+     * @param array<Caracteristica> $adicionales
      * @return Propiedad
      */
     public function setAdicionales(array $adicionales): Propiedad
     {
         $this->adicionales = $adicionales;
+        return $this;
+    }
+
+    public function addAdicional(Caracteristica $adicional): Propiedad
+    {
+        $this->adicionales[] = $adicional;
         return $this;
     }
 
@@ -800,20 +825,76 @@ class Propiedad
     }
 
     /**
-     * @return float
+     * @return array
      */
-    public function getSuperficieCubierta(): ?float
+    public function getTerreno(): array
+    {
+        return [
+            'ancho' => $this->getAncho(),
+            'largo' => $this->getLargo(),
+            'superficie' => $this->getSuperficie(),
+        ];
+    }
+
+    public function getAncho(): ?int
+    {
+        return $this->ancho;
+    }
+
+    public function setAncho(?int $ancho): Propiedad
+    {
+        $this->ancho = $ancho;
+        return $this;
+    }
+
+    public function getLargo(): ?int
+    {
+        return $this->largo;
+    }
+
+    public function setLargo(?int $largo): Propiedad
+    {
+        $this->largo = $largo;
+        return $this;
+    }
+
+    public function getSuperficie(): ?int
+    {
+        return $this->superficie;
+    }
+
+    public function setSuperficie(?int $superficie): Propiedad
+    {
+        $this->superficie = $superficie;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSuperficieCubierta(): ?int
     {
         return $this->superficieCubierta;
     }
 
     /**
-     * @param float $superficieCubierta
+     * @param int $superficieCubierta
      * @return Propiedad
      */
-    public function setSuperficieCubierta(?float $superficieCubierta): Propiedad
+    public function setSuperficieCubierta(?int $superficieCubierta): Propiedad
     {
         $this->superficieCubierta = $superficieCubierta;
+        return $this;
+    }
+
+    public function getSuperficieSemicubierta(): ?int
+    {
+        return $this->superficieSemicubierta;
+    }
+
+    public function setSuperficieSemicubierta(?int $superficieSemicubierta): Propiedad
+    {
+        $this->superficieSemicubierta = $superficieSemicubierta;
         return $this;
     }
 
@@ -847,7 +928,7 @@ class Propiedad
      * @param string $documentacion
      * @return Propiedad
      */
-    public function setDocumentacion(string $documentacion): Propiedad
+    public function setDocumentacion(?string $documentacion): Propiedad
     {
         $this->documentacion = $documentacion;
         return $this;
@@ -882,35 +963,17 @@ class Propiedad
      */
     public function getPrecio(): array
     {
-        return $this->precio;
-    }
+        $precios = [];
+        if ($this->getPrecioVenta()) {
+            $precios['venta'] = $this->getPrecioVenta()->toArray();
+        }
 
-    /**
-     * @param array $precio
-     * @return Propiedad
-     */
-    public function setPrecio(array $precio): Propiedad
-    {
-        $this->precio = $precio;
-        return $this;
-    }
+        if ($this->getPrecioAlquiler()) {
+            $precios['alquiler'] = $this->getPrecioAlquiler()->toArray();
+            $precios['alquiler']['porcentajeCompartido'] = $this->getPorcentajeCompartido();
+        }
 
-    /**
-     * @return array
-     */
-    public function getTerreno(): array
-    {
-        return $this->terreno;
-    }
-
-    /**
-     * @param array $terreno
-     * @return Propiedad
-     */
-    public function setTerreno(array $terreno): Propiedad
-    {
-        $this->terreno = $terreno;
-        return $this;
+        return $precios;
     }
 
     /**
@@ -927,7 +990,24 @@ class Propiedad
      */
     public function setScopes(array $scopes): Propiedad
     {
-        $this->scopes = $scopes;
+        $this->scopes = self::filtrarScopes($scopes);
+        return $this;
+    }
+
+    public static function filtrarScopes(array $scopes): array
+    {
+        return array_filter($scopes, function ($s) {
+            return in_array($s, [self::SCOPE_PUBLICO, self::SCOPE_CORREDORES], true);
+        });
+    }
+
+    public function addScope(string $scope): Propiedad
+    {
+        $scopes = self::filtrarScopes([$scope]);
+        if (count($scopes)) {
+            $this->scopes[] = $scopes[0];
+        }
+
         return $this;
     }
 
@@ -985,9 +1065,37 @@ class Propiedad
         return $this;
     }
 
+    public function setPrecioVenta(Importe $importe): Propiedad
+    {
+        $this->precioVenta = $importe;
+        return $this;
+    }
+
+    public function setPrecioAlquiler(Importe $importe, ?int $porcentajeCompartido = null): Propiedad
+    {
+        $this->precioAlquiler = $importe;
+        $this->porcentajeCompartido = $porcentajeCompartido ?? 0;
+        return $this;
+    }
+
+    public function getPrecioVenta(): ?Importe
+    {
+        return $this->precioVenta;
+    }
+
+    public function getPrecioAlquiler(): ?Importe
+    {
+        return $this->precioAlquiler;
+    }
+
+    public function getPorcentajeCompartido(): int
+    {
+        return $this->porcentajeCompartido;
+    }
+
+
     public function __toString()
     {
         return sprintf('%s, %s', $this->getDireccion(), $this->getCiudad()->getNombre());
     }
-
 }
