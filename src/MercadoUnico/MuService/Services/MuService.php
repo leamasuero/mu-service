@@ -2,20 +2,24 @@
 
 namespace MercadoUnico\MuService\Services;
 
+use MercadoUnico\MuClient\Exceptions\JsonErrorException;
 use MercadoUnico\MuClient\Exceptions\MuErrorResponseException;
 use MercadoUnico\MuClient\Exceptions\MuException;
 use MercadoUnico\MuClient\MuClient;
 use MercadoUnico\MuService\Models\Caracteristica;
 use MercadoUnico\MuService\Models\Ciudad;
+use MercadoUnico\MuService\Models\Documento;
 use MercadoUnico\MuService\Models\Operacion;
 use MercadoUnico\MuService\Models\Propiedad;
 use MercadoUnico\MuService\Models\TipoPropiedad;
 use MercadoUnico\MuService\Transformers\CiudadTransformer;
+use MercadoUnico\MuService\Transformers\DocumentoTransformer;
 use MercadoUnico\MuService\Transformers\OperacionTransformer;
 use MercadoUnico\MuService\Transformers\PropiedadTransformer;
 use MercadoUnico\MuService\Transformers\TipoPropiedadTransformer;
 use MercadoUnico\MuService\Util\Alerta;
 use MercadoUnico\MuService\Util\Query;
+use SplFileInfo;
 
 class MuService
 {
@@ -108,7 +112,7 @@ class MuService
     /**
      * @param Propiedad $propiedad
      * @return Propiedad
-     * @throws \MercadoUnico\MuClient\Exceptions\JsonErrorException
+     * @throws JsonErrorException
      * @throws MuException
      */
     public function storePropiedad(Propiedad $propiedad): Propiedad
@@ -172,6 +176,26 @@ class MuService
     }
 
     /**
+     * @param SplFileInfo $documento
+     * @param string $filename
+     * @return Documento|null
+     * @throws MuErrorResponseException
+     * @throws MuException
+     */
+    public function storeDocumento(SplFileInfo $documento, string $filename): ?Documento
+    {
+        $response = $this->muClient->storeDocumento($documento, $filename);
+
+        $documentos = (new DocumentoTransformer())->transformCollection($response->getBody());
+        if (isset($documentos[0])) {
+            return $documentos[0];
+        }
+
+        return null;
+    }
+
+
+    /**
      * @param Ciudad $ciudad
      * @return Ciudad
      */
@@ -204,7 +228,7 @@ class MuService
     /**
      * @param Propiedad $propiedad
      * @return Propiedad
-     * @throws \MercadoUnico\MuClient\Exceptions\JsonErrorException
+     * @throws JsonErrorException
      * @throws MuException
      */
     public function updatePropiedad(Propiedad $propiedad): Propiedad
