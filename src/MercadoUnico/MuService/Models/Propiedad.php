@@ -16,17 +16,17 @@ class Propiedad
     /**
      * @var string
      */
-    protected ?string $id;
+    protected ?string $id = null;
 
     /**
      * @var string
      */
-    protected ?string $codigo;
+    protected ?string $codigo = null;
 
     /**
      * @var string
      */
-    protected ?string $direccion;
+    protected ?string $direccion = null;
 
     /**
      * @var string
@@ -37,7 +37,7 @@ class Propiedad
     /**
      * @var ?Importe
      */
-    protected ?Importe $precioVenta;
+    protected ?Importe $precioVenta = null;
 
     /**
      * @var ?Importe
@@ -72,9 +72,9 @@ class Propiedad
     /**
      * @var string
      */
-    protected ?string $observaciones;
+    protected ?string $observaciones = null;
 
-    protected ?string $observacionesPrivadas;
+    protected ?string $observacionesPrivadas = null;
 
     /**
      * @var string
@@ -120,7 +120,7 @@ class Propiedad
     /**
      * @var string
      */
-    protected ?string $ocultaComment;
+    protected ?string $ocultaComment = null;
 
     /**
      * @var bool
@@ -151,12 +151,12 @@ class Propiedad
     /**
      * @var Inmobiliaria
      */
-    protected ?Inmobiliaria $inmobiliaria;
+    protected ?Inmobiliaria $inmobiliaria = null;
 
     /**
      * @var Corredor
      */
-    protected ?Corredor $corredor;
+    protected ?Corredor $corredor = null;
 
     /**
      * @var array
@@ -195,15 +195,15 @@ class Propiedad
 
     protected ?int $antiguedad = null;
 
-    protected ?string $latitud;
+    protected ?string $latitud = null;
 
-    protected ?string $longitud;
+    protected ?string $longitud = null;
 
-    protected ?\DateTimeInterface $ocultadaAt;
+    protected ?\DateTimeInterface $ocultadaAt = null;
 
-    protected ?\DateTimeInterface $createdAt;
+    protected ?\DateTimeInterface $createdAt = null;
 
-    protected ?\DateTimeInterface $updatedAt;
+    protected ?\DateTimeInterface $updatedAt = null;
 
     /**
      * @var string
@@ -478,10 +478,10 @@ class Propiedad
     }
 
     /**
-     * @param string $observaciones
+     * @param ?string $observaciones
      * @return Propiedad
      */
-    public function setObservaciones(string $observaciones): Propiedad
+    public function setObservaciones(?string $observaciones): Propiedad
     {
         $this->observaciones = $observaciones;
         return $this;
@@ -1038,10 +1038,10 @@ class Propiedad
     }
 
     /**
-     * @param string $latitud
+     * @param ?string $latitud
      * @return Propiedad
      */
-    public function setLatitud(string $latitud): Propiedad
+    public function setLatitud(?string $latitud): Propiedad
     {
         $this->latitud = $latitud;
         return $this;
@@ -1056,10 +1056,10 @@ class Propiedad
     }
 
     /**
-     * @param string $longitud
+     * @param ?string $longitud
      * @return Propiedad
      */
-    public function setLongitud(string $longitud): Propiedad
+    public function setLongitud(?string $longitud): Propiedad
     {
         $this->longitud = $longitud;
         return $this;

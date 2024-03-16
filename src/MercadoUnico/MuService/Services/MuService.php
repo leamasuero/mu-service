@@ -121,6 +121,7 @@ class MuService
 //        []: solo la ve la inmobiliaria
 //        ['mu:corredores:main']: la ven todos los corredores
 //        ['mu:publico', 'mu:corredores:main']: visible por todos
+
         $data = [
             "scopes" => $propiedad->getScopes(),
 //            "inmobiliaria" => '58bac1d3c2138539ce7f82d0', # la esta deduciendo mu
@@ -129,10 +130,6 @@ class MuService
                 "ciudad" => $propiedad->getCiudad()->getId(),
                 "provincia" => "{$propiedad->getCiudad()->getProvincia()}",
                 "direccion" => $propiedad->getDireccion(),
-                "coordenadas" => [
-                    $propiedad->getLatitud(),
-                    $propiedad->getLongitud(),
-                ]
             ],
             "descripcion" => $propiedad->getDescripcion(),
             "observaciones" => $propiedad->getObservaciones(),
@@ -169,6 +166,13 @@ class MuService
             "nroPartidaInmobiliaria" => $propiedad->getNroPartidaInmobiliaria(),
             "estado" => $propiedad->getEstado(),
         ];
+
+        if ($propiedad->getLatitud() && $propiedad->getLongitud()) {
+            $data['ubicacion']['coordenadas'] = [
+                $propiedad->getLatitud(),
+                $propiedad->getLongitud(),
+            ];
+        }
 
         $response = $this->muClient->storePropiedad($data);
 

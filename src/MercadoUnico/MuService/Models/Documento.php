@@ -5,7 +5,6 @@ namespace MercadoUnico\MuService\Models;
 class Documento
 {
     private string $name;
-
     private string $url;
 
     /**

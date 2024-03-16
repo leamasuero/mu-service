@@ -22,7 +22,17 @@ class Caracteristica implements \JsonSerializable
         ];
     }
 
-    public function jsonSerialize(): mixed
+    public function __toString(): string
+    {
+        return $this->nombre;
+    }
+
+    public function getNombre(): string
+    {
+        return $this->nombre;
+    }
+
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
