@@ -4,8 +4,8 @@ namespace MercadoUnico\MuService\Models;
 
 class Documento
 {
-    private string $name;
-    private string $url;
+    protected string $name;
+    protected string $url;
 
     /**
      * @param string $name
@@ -25,6 +25,14 @@ class Documento
     public function getUrl(): string
     {
         return $this->url;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->getName(),
+            'url' => $this->getUrl(),
+        ];
     }
 
 }

@@ -8,17 +8,17 @@ class TipoPropiedad
     /**
      * @var string
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      */
-    private $slug;
+    protected $slug;
 
     /**
      * @var string
      */
-    private $nombre;
+    protected $nombre;
 
     /**
      * TipoPropiedad constructor.

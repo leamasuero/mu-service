@@ -3,6 +3,7 @@
 namespace MercadoUnico\MuService\Models;
 
 use DateTime;
+use DateTimeInterface;
 
 class Propiedad
 {
@@ -10,26 +11,27 @@ class Propiedad
     // []: solo la ve la inmobiliaria
     // ['mu:corredores:main']: la ven todos los corredores
     // ['mu:publico', 'mu:corredores:main']: visible por todos
+
     const SCOPE_PUBLICO = 'mu:publico';
     const SCOPE_CORREDORES = 'mu:corredores:main';
 
     /**
-     * @var string
+     * @var string|null
      */
     protected ?string $id = null;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected ?string $codigo = null;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected ?string $direccion = null;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected ?string $descripcion;
 
@@ -45,17 +47,17 @@ class Propiedad
     protected ?Importe $precioAlquiler;
 
     /**
-     * @var TipoPropiedad
+     * @var TipoPropiedad|null
      */
     protected ?TipoPropiedad $tipoPropiedad;
 
     /**
-     * @var int
+     * @var int|null
      */
     protected ?int $banos = null;
 
     /**
-     * @var int
+     * @var int|null
      */
     protected ?int $dormitorios = null;
 
@@ -70,26 +72,26 @@ class Propiedad
     protected array $scopes;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected ?string $observaciones = null;
 
     protected ?string $observacionesPrivadas = null;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected ?string $documentacion = null;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected ?string $nroPartidaInmobiliaria = null;
 
     /**
      * @var bool
      */
-    protected $ofertaColectiva;
+    protected bool $ofertaColectiva;
 
     /**
      * @var array<Operacion>
@@ -97,7 +99,7 @@ class Propiedad
     protected array $operaciones;
 
     /**
-     * @var array
+     * @var array<Imagen>
      */
     protected array $imagenes;
 
@@ -111,14 +113,13 @@ class Propiedad
      */
     protected array $videos;
 
-
     /**
      * @var array
      */
     protected array $reportes;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected ?string $ocultaComment = null;
 
@@ -149,17 +150,17 @@ class Propiedad
     protected bool $cartel;
 
     /**
-     * @var Inmobiliaria
+     * @var Inmobiliaria|null
      */
     protected ?Inmobiliaria $inmobiliaria = null;
 
     /**
-     * @var Corredor
+     * @var Corredor|null
      */
     protected ?Corredor $corredor = null;
 
     /**
-     * @var array
+     * @var array<Documento>
      */
     protected array $documentos;
 
@@ -199,21 +200,21 @@ class Propiedad
 
     protected ?string $longitud = null;
 
-    protected ?\DateTimeInterface $ocultadaAt = null;
+    protected ?DateTimeInterface $ocultadaAt = null;
 
-    protected ?\DateTimeInterface $createdAt = null;
+    protected ?DateTimeInterface $createdAt = null;
 
-    protected ?\DateTimeInterface $updatedAt = null;
+    protected ?DateTimeInterface $updatedAt = null;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $baseUrl;
+    protected ?string $baseUrl = null;
 
     public function __construct($direccion = null)
     {
         $this->direccion = $direccion;
-        $this->estado = 1;
+        $this->estado = 3;
         $this->scopes = [];
 
         $this->cochera = false;
@@ -227,12 +228,15 @@ class Propiedad
         $this->adicionales = [];
         $this->documentacionDisponible = [];
 
+        $this->imagenes = [];
+        $this->documentos = [];
+
         $this->createdAt = new DateTime();
         $this->updatedAt = new DateTime();
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getId(): ?string
     {
@@ -250,7 +254,7 @@ class Propiedad
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getDireccion(): ?string
     {
@@ -332,7 +336,7 @@ class Propiedad
     }
 
     /**
-     * @return TipoPropiedad
+     * @return TipoPropiedad|null
      */
     public function getTipoPropiedad(): ?TipoPropiedad
     {
@@ -383,7 +387,7 @@ class Propiedad
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getBanos(): ?int
     {
@@ -391,7 +395,7 @@ class Propiedad
     }
 
     /**
-     * @param int $banos
+     * @param int|null $banos
      * @return Propiedad
      */
     public function setBanos(?int $banos): Propiedad
@@ -401,7 +405,7 @@ class Propiedad
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getDormitorios(): ?int
     {
@@ -409,7 +413,7 @@ class Propiedad
     }
 
     /**
-     * @param int $dormitorios
+     * @param int|null $dormitorios
      * @return Propiedad
      */
     public function setDormitorios(?int $dormitorios): Propiedad
@@ -419,7 +423,7 @@ class Propiedad
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
     public function getCochera(): ?bool
     {
@@ -536,7 +540,7 @@ class Propiedad
     }
 
     /**
-     * @return array
+     * @return array<Imagen>
      */
     public function getImagenes(): array
     {
@@ -544,12 +548,23 @@ class Propiedad
     }
 
     /**
-     * @param array $imagenes
+     * @param array<Imagen> $imagenes
      * @return Propiedad
      */
     public function setImagenes(array $imagenes): Propiedad
     {
         $this->imagenes = $imagenes;
+        return $this;
+    }
+
+
+    /**
+     * @param Imagen $imagen
+     * @return Propiedad
+     */
+    public function addImagen(Imagen $imagen): Propiedad
+    {
+        $this->imagenes[] = $imagen;
         return $this;
     }
 
@@ -634,7 +649,7 @@ class Propiedad
     }
 
     /**
-     * @param DateTime $ocultadaAt
+     * @param DateTime|null $ocultadaAt
      * @return Propiedad
      */
     public function setOcultadaAt(?DateTime $ocultadaAt): Propiedad
@@ -716,7 +731,7 @@ class Propiedad
     }
 
     /**
-     * @return array
+     * @return array<Documento>
      */
     public function getDocumentos(): array
     {
@@ -724,7 +739,7 @@ class Propiedad
     }
 
     /**
-     * @param array $documentos
+     * @param array<Documento> $documentos
      * @return Propiedad
      */
     public function setDocumentos(array $documentos): Propiedad
@@ -870,7 +885,7 @@ class Propiedad
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getSuperficieCubierta(): ?int
     {
@@ -878,7 +893,7 @@ class Propiedad
     }
 
     /**
-     * @param int $superficieCubierta
+     * @param int|null $superficieCubierta
      * @return Propiedad
      */
     public function setSuperficieCubierta(?int $superficieCubierta): Propiedad
@@ -925,7 +940,7 @@ class Propiedad
     }
 
     /**
-     * @param string $documentacion
+     * @param string|null $documentacion
      * @return Propiedad
      */
     public function setDocumentacion(?string $documentacion): Propiedad
@@ -1022,9 +1037,9 @@ class Propiedad
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    private function getBaseUrl(): string
+    private function getBaseUrl(): ?string
     {
         return $this->baseUrl;
     }

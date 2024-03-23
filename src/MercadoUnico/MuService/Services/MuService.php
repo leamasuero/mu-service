@@ -9,9 +9,11 @@ use MercadoUnico\MuClient\MuClient;
 use MercadoUnico\MuService\Models\Caracteristica;
 use MercadoUnico\MuService\Models\Ciudad;
 use MercadoUnico\MuService\Models\Documento;
+use MercadoUnico\MuService\Models\Imagen;
 use MercadoUnico\MuService\Models\Operacion;
 use MercadoUnico\MuService\Models\Propiedad;
 use MercadoUnico\MuService\Models\TipoPropiedad;
+use MercadoUnico\MuService\Requests\PropiedadRequest;
 use MercadoUnico\MuService\Transformers\CiudadTransformer;
 use MercadoUnico\MuService\Transformers\DocumentoTransformer;
 use MercadoUnico\MuService\Transformers\OperacionTransformer;
@@ -122,59 +124,7 @@ class MuService
 //        ['mu:corredores:main']: la ven todos los corredores
 //        ['mu:publico', 'mu:corredores:main']: visible por todos
 
-        $data = [
-            "scopes" => $propiedad->getScopes(),
-//            "inmobiliaria" => '58bac1d3c2138539ce7f82d0', # la esta deduciendo mu
-//            "corredor" => 'noenviamos', # vendedor id?
-            "ubicacion" => [
-                "ciudad" => $propiedad->getCiudad()->getId(),
-                "provincia" => "{$propiedad->getCiudad()->getProvincia()}",
-                "direccion" => $propiedad->getDireccion(),
-            ],
-            "descripcion" => $propiedad->getDescripcion(),
-            "observaciones" => $propiedad->getObservaciones(),
-            "documentacion" => $propiedad->getDocumentacion(),
-            "terreno" => $propiedad->getTerreno(),
-            "superficieCubierta" => $propiedad->getSuperficieCubierta(),
-            "superficieSemicubierta" => $propiedad->getSuperficieCubierta(),
-            "antiguedad" => $propiedad->getAntiguedad(),
-            "operacion" => array_map(function (Operacion $operacion) {
-                return $operacion->getId();
-            }, $propiedad->getOperaciones()),
-            "tipoPropiedad" => $propiedad->getTipoPropiedad()->getId(),
-            "precio" => $propiedad->getPrecio(),
-            "cochera" => $propiedad->getCochera(),
-            "aptaCredito" => $propiedad->isAptaCredito(),
-            "dormitorios" => $propiedad->getDormitorios(),
-            "banos" => $propiedad->getBanos(),
-            "imagenes" => [], # todo
-            "panoramicas" => [], # todo
-            "documentos" => [], # todo
-            "videos" => [], # todo
-            "cartel" => $propiedad->getCartel(),
-            "esCondicionada" => $propiedad->isCondicionada(),
-            "observacionesPrivadas" => $propiedad->getObservacionesPrivadas(),
-            "servicios" => array_map(function (Caracteristica $servicio) {
-                return $servicio->toArray();
-            }, $propiedad->getServicios()),
-            "adicionales" => array_map(function (Caracteristica $adicional) {
-                return $adicional->toArray();
-            }, $propiedad->getAdicionales()),
-            "documentacionDisponible" => array_map(function (Caracteristica $documentacion) {
-                return $documentacion->toArray();
-            }, $propiedad->getDocumentacionDisponible()),
-            "nroPartidaInmobiliaria" => $propiedad->getNroPartidaInmobiliaria(),
-            "estado" => $propiedad->getEstado(),
-        ];
-
-        if ($propiedad->getLatitud() && $propiedad->getLongitud()) {
-            $data['ubicacion']['coordenadas'] = [
-                $propiedad->getLatitud(),
-                $propiedad->getLongitud(),
-            ];
-        }
-
-        $response = $this->muClient->storePropiedad($data);
+        $response = $this->muClient->storePropiedad(PropiedadRequest::create($propiedad)->getData());
 
         return (new PropiedadTransformer($this->getBaseUrl()))->transform($response->getBody());
     }
@@ -241,18 +191,8 @@ class MuService
 //        []: solo la ve la inmobiliaria
 //        ['mu:corredores:main']: la ven todos los corredores
 //        ['mu:publico', 'mu:corredores:main']: visible por todos
-        $data = [
-//            "scopes" => [],
-            "operaciones" => $this->alquilerId,
-            "tipoPropiedad" => $propiedad->getTipoPropiedad()->getId(),
-            "descripcion" => $propiedad->getDescripcion(),
-            "ubicacion" => [
-                "direccion" => $propiedad->getDireccion(),
-                "ciudad" => "{$propiedad->getCiudad()}",
-            ]
-        ];
 
-        $response = $this->muClient->storePropiedad($data);
+        $response = $this->muClient->updatePropiedad($propiedad->getId(), PropiedadRequest::create($propiedad)->getData());
 
         return (new PropiedadTransformer($this->getBaseUrl()))->transform($response->getBody());
     }

@@ -8,37 +8,37 @@ class Ciudad
     /**
      * @var string|null
      */
-    private ?string $id;
+    protected ?string $id;
 
     /**
      * @var string|null
      */
-    private ?string $slug;
+    protected ?string $slug;
 
     /**
      * @var string|null
      */
-    private ?string $nombre;
+    protected ?string $nombre;
 
     /**
      * @var float|null
      */
-    private ?float $latitud;
+    protected ?float $latitud;
 
     /**
      * @var float|null
      */
-    private ?float $longitud;
+    protected ?float $longitud;
 
     /**
      * @var int|null
      */
-    private ?int $zoom;
+    protected ?int $zoom;
 
     /**
      * @var string|null
      */
-    private ?string $provincia;
+    protected ?string $provincia;
 
     /**
      * Ciudad constructor.

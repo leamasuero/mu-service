@@ -2,6 +2,7 @@
 
 namespace MercadoUnico\MuService\Transformers;
 
+use DateTime;
 use MercadoUnico\MuService\Interfaces\TransformerInterface;
 use MercadoUnico\MuService\Models\Caracteristica;
 use MercadoUnico\MuService\Models\Propiedad;
@@ -41,13 +42,15 @@ class PropiedadTransformer implements TransformerInterface
             ->setDocumentacion($data['documentacion'] ?? null)
             ->setNroPartidaInmobiliaria($data['nroPartidaInmobiliaria'] ?? null)
             ->setOfertaColectiva($data['ofertaColectiva'] ?? null)
-            ->setImagenes($data['imagenes'] ?? null)
+            ->setImagenes(
+                (new ImagenTransformer())->transformCollection($data['imagenes'] ?? [])
+            )
             ->setPanoramicas($data['panoramicas'] ?? null)
             ->setVideos($data['videos'] ?? null)
             ->setDestacada($data['destacada'] ?? null)
             ->setEstado($data['estado'] ?? null)
             ->setOcultadaAt(
-                isset($data['ocultadaAt']) ? \DateTime::createFromFormat(self::DATE_TIME_FORMAT, $data['ocultadaAt']) : null
+                isset($data['ocultadaAt']) ? DateTime::createFromFormat(self::DATE_TIME_FORMAT, $data['ocultadaAt']) : null
             )
             ->setReportes($data['reportes'] ?? null)
             ->setOcultaComment($data['ocultaComment'] ?? null)
@@ -61,14 +64,16 @@ class PropiedadTransformer implements TransformerInterface
                 (new TipoPropiedadTransformer())->transform($data['tipoPropiedad'] ?? [])
             )
             ->setUpdatedAt(
-                \DateTime::createFromFormat(self::DATE_TIME_FORMAT, $data['updatedAt'] ?? null)
+                DateTime::createFromFormat(self::DATE_TIME_FORMAT, $data['updatedAt'] ?? null)
             )
             ->setInmobiliaria(
                 (new InmobiliariaTransformer())->transform($data['inmobiliaria'] ?? [])
             )->setCorredor(
                 (new CorredorTransformer())->transform($data['corredor'] ?? [])
             )
-            ->setDocumentos($data['documentos'] ?? null)
+            ->setDocumentos(
+                (new DocumentoTransformer())->transformCollection($data['documentos'] ?? [])
+            )
             ->setDocumentacionDisponible(array_map(function (array $documentacionDisponible) {
                 return new Caracteristica($documentacionDisponible['nombre']);
             }, $data['documentacionDisponible']))
@@ -79,7 +84,7 @@ class PropiedadTransformer implements TransformerInterface
                 return new Caracteristica($adicional['nombre']);
             }, $data['adicionales']))
             ->setCreatedAt(
-                \DateTime::createFromFormat(self::DATE_TIME_FORMAT, $data['createdAt'] ?? null)
+                DateTime::createFromFormat(self::DATE_TIME_FORMAT, $data['createdAt'] ?? null)
             )
             ->setCodigo($data['codigo'] ?? null)
             ->setSlug($data['slug'] ?? null)
